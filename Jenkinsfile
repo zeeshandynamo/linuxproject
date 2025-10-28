@@ -18,7 +18,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'echo "All tests passed!"'
+                sh 'echo "All tests passed successfully!"'
             }
         }
 
@@ -40,7 +40,6 @@ pipeline {
                     echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                     docker tag linuxproject:latest $DOCKER_USER/linuxproject:latest
                     docker push $DOCKER_USER/linuxproject:latest
-                    docker logout
                     '''
                 }
             }

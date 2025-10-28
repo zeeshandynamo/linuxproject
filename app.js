@@ -57,10 +57,10 @@ app.get('/', (req, res) => {
         <h2>DevOps Automation Pipeline</h2>
 
         <ul>
-          <li>👩‍💻 Hena — Frontend Designer</li>
-          <li>👨‍💻 Zeeshan Ali — Project Lead</li>
-          <li>👩‍💻 Naeem — Backend Developer</li>
-          <li>👨‍💻 Altaf — DevOps Engineer</li>
+          <li>👩‍💻 Hena </li>
+          <li>👨‍💻 Zeeshan Ali</li>
+          <li>👩‍💻 Naeem </li>
+          <li>👨‍💻 Altaf</li>
         </ul>
 
         <div class="footer">

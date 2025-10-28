@@ -55,7 +55,7 @@ app.get('/', (req, res) => {
       <body>
         <h1>ITGateway Linux Project</h1>
         <h2>DevOps Automation Pipeline</h2>
-        <h3>Under the guidance of Sarfarazz sir</h3>
+        <h3>Under the guidance of Sarfaraz sir</h3>
 
         <ul>
           <li>👩‍💻 Hena tabbu</li>

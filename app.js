@@ -3,8 +3,7 @@ const app = express();
 const PORT = 3000;
 
 app.get('/', (req, res) => {
-  res.send('DevOps Automation Pipeline working perfectly!');
-  <h1>Journey Beyond Horizons — by Zeeshan Dynamo</h1>
+  res.send('DevOps Automation Pipeline working perfectly! and the project is Run by Zeeshan spending 5 hours');
 
 });
 

@@ -3,10 +3,12 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/zeeshandynamo/linuxproject.git'
-            }
-        }
+    steps {
+        git branch: 'main',
+            credentialsId: 'github-token',
+            url: 'https://github.com/zeeshandynamo/linuxproject.git'
+    }
+}
 
         stage('Build') {
             steps {

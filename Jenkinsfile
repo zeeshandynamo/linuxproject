@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'centos-agent' }  // Ensure this matches your Jenkins agent label
+    agent any  // Ensure this matches your Jenkins agent label
 
     // 🔔 Automatically trigger this pipeline whenever a push happens on GitHub
     triggers {

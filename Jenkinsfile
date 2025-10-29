@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "zeeshandynamo/linuxproject"
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-cred')
+        DOCKER_IMAGE = "zeeshandynamo/linuxproject:latest"
     }
 
     stages {
@@ -17,25 +16,46 @@ pipeline {
             steps {
                 sh '''
                     echo "🐳 Building Docker image..."
-                    sudo docker build -t $IMAGE_NAME:latest .
+                    docker build -t $DOCKER_IMAGE .
                 '''
             }
         }
 
         stage('Login to DockerHub') {
             steps {
-                sh '''
-                    echo "🔐 Logging in to DockerHub..."
-                    echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
-                '''
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo "🔐 Logging into DockerHub..."
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    '''
+                }
             }
         }
 
         stage('Push to DockerHub') {
             steps {
                 sh '''
-                    echo "📦 Pushing image to DockerHub..."
-                    sudo docker push $IMAGE_NAME:latest
+                    echo "📤 Pushing image to DockerHub..."
+                    docker push $DOCKER_IMAGE
+                '''
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                sh '''
+                    echo "🚀 Running container..."
+                    docker rm -f linuxproject || true
+                    docker run -d --name linuxproject -p 8081:8081 $DOCKER_IMAGE
+                '''
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                sh '''
+                    echo "🧹 Cleaning up unused Docker data..."
+                    docker system prune -f
                 '''
             }
         }
@@ -43,7 +63,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ Successfully built and pushed image to DockerHub!"
+            echo "✅ Build, push, and deploy completed successfully!"
         }
         failure {
             echo "❌ Build failed. Check logs."

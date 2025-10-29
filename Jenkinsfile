@@ -1,5 +1,10 @@
 pipeline {
-    agent { label 'centos-agent' }  // Make sure your CentOS node label is set to this
+    agent { label 'centos-agent' }  // Ensure this matches your Jenkins agent label
+
+    // 🔔 Automatically trigger this pipeline whenever a push happens on GitHub
+    triggers {
+        githubPush()
+    }
 
     environment {
         IMAGE_NAME = "zeeshandynamo/linuxproject"
@@ -31,9 +36,9 @@ pipeline {
             }
         }
 
-        stage('Security Scan - Trivy') {
+        stage('Security Scan - Trivy (File System)') {
             steps {
-                echo "🛡️ Scanning for vulnerabilities with Trivy..."
+                echo "🛡️ Scanning source files with Trivy..."
                 sh 'trivy fs . || true'
             }
         }
@@ -47,7 +52,7 @@ pipeline {
 
         stage('Trivy Image Scan') {
             steps {
-                echo "🔎 Scanning Docker image..."
+                echo "🔎 Scanning Docker image for vulnerabilities..."
                 sh 'trivy image $IMAGE_NAME:latest || true'
             }
         }

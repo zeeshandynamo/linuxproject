@@ -1,48 +1,60 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_IMAGE = "linuxproject:latest"
+        DOCKERHUB_REPO = "zeeshandynamo/linuxproject"
+    }
+
     stages {
+
         stage('Checkout') {
             steps {
-                echo '📥 Cloning Repository...'
                 git branch: 'main', url: 'https://github.com/zeeshandynamo/linuxproject.git'
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                echo '📦 Installing dependencies...'
-                sh '''
-                    if [ -f package.json ]; then
-                        npm install
-                    else
-                        echo "No package.json found, skipping npm install"
-                    fi
-                '''
             }
         }
 
         stage('Build') {
             steps {
-                echo '⚙️ Building project (if needed)...'
-                sh 'echo "No build step required for app.js"'
+                echo '🏗️ Building the project...'
+                sh 'npm install'
             }
         }
 
-        stage('Deploy') {
+        stage('Test') {
             steps {
-                echo '🚀 Deploying app on port 3000...'
+                echo '🧪 Running tests...'
+                // replace below with your test command if you have tests
+                sh 'echo "No tests configured, skipping..."'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo '🐳 Building Docker image...'
+                sh 'docker build -t $DOCKER_IMAGE .'
+            }
+        }
+
+        stage('Push to DockerHub') {
+            steps {
+                echo '🚀 Pushing image to DockerHub...'
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker tag $DOCKER_IMAGE $DOCKERHUB_REPO:latest
+                        docker push $DOCKERHUB_REPO:latest
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy (Optional)') {
+            steps {
+                echo '📦 Running container locally on port 3000...'
                 sh '''
-                    APP_PID=$(pgrep -f "node app.js" || true)
-                    if [ ! -z "$APP_PID" ]; then
-                        echo "Stopping existing app (PID: $APP_PID)..."
-                        kill -9 $APP_PID || true
-                    fi
-                    
-                    echo "Starting new app instance..."
-                    nohup node app.js > app.log 2>&1 &
-                    sleep 3
-                    echo "App restarted successfully!"
+                    docker ps -q --filter "ancestor=$DOCKER_IMAGE" | xargs -r docker stop
+                    docker run -d -p 3000:3000 $DOCKERHUB_REPO:latest
                 '''
             }
         }
@@ -50,10 +62,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ Build & Deployment Successful!'
+            echo '✅ Build, Docker Push & Deploy completed successfully!'
         }
         failure {
-            echo '❌ Build Failed. Check Console Output.'
+            echo '❌ Build failed! Check logs for details.'
         }
     }
 }

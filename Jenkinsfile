@@ -2,59 +2,40 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "linuxproject:latest"
-        DOCKERHUB_REPO = "zeeshandynamo/linuxproject"
+        IMAGE_NAME = "zeeshandynamo/linuxproject"
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-cred')
     }
 
     stages {
-
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/zeeshandynamo/linuxproject.git'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                echo '🏗️ Building the project...'
-                sh 'npm install'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo '🧪 Running tests...'
-                // replace below with your test command if you have tests
-                sh 'echo "No tests configured, skipping..."'
+                git branch: 'main', url: 'https://github.com/<your-username>/<your-repo>.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                echo '🐳 Building Docker image...'
-                sh 'docker build -t $DOCKER_IMAGE .'
+                sh '''
+                    echo "🐳 Building Docker image..."
+                    sudo docker build -t $IMAGE_NAME:latest .
+                '''
+            }
+        }
+
+        stage('Login to DockerHub') {
+            steps {
+                sh '''
+                    echo "🔐 Logging in to DockerHub..."
+                    echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+                '''
             }
         }
 
         stage('Push to DockerHub') {
             steps {
-                echo '🚀 Pushing image to DockerHub...'
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker tag $DOCKER_IMAGE $DOCKERHUB_REPO:latest
-                        docker push $DOCKERHUB_REPO:latest
-                    '''
-                }
-            }
-        }
-
-        stage('Deploy (Optional)') {
-            steps {
-                echo '📦 Running container locally on port 3000...'
                 sh '''
-                    docker ps -q --filter "ancestor=$DOCKER_IMAGE" | xargs -r docker stop
-                    docker run -d -p 3000:3000 $DOCKERHUB_REPO:latest
+                    echo "📦 Pushing image to DockerHub..."
+                    sudo docker push $IMAGE_NAME:latest
                 '''
             }
         }
@@ -62,10 +43,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ Build, Docker Push & Deploy completed successfully!'
+            echo "✅ Successfully built and pushed image to DockerHub!"
         }
         failure {
-            echo '❌ Build failed! Check logs for details.'
+            echo "❌ Build failed. Check logs."
         }
     }
 }

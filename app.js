@@ -62,6 +62,7 @@ app.get('/', (req, res) => {
           <li>👨‍💻 Zeeshan </li>
           <li>👩‍💻 Naeem Momin </li>
           <li>👨‍💻 Altaf Ahmed </li>
+          <li>👨‍💻 Altaf Ahmed </li>
         </ul>
 
         <div class="footer">

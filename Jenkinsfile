@@ -13,15 +13,6 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                echo "🐳 Building Docker image..."
-                sh '''
-                    docker build -t $DOCKER_IMAGE .
-                '''
-            }
-        }
-
         stage('Login to DockerHub') {
             steps {
                 echo "🔐 Logging into DockerHub..."
@@ -30,6 +21,15 @@ pipeline {
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                     '''
                 }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo "🐳 Building Docker image..."
+                sh '''
+                    docker build -t $DOCKER_IMAGE .
+                '''
             }
         }
 

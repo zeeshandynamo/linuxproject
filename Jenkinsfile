@@ -6,10 +6,28 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout Code') {
             steps {
                 echo "📥 Checking out latest code from GitHub..."
                 git branch: 'main', url: 'https://github.com/zeeshandynamo/linuxproject.git'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                echo "🔍 Running SonarQube analysis..."
+                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')]) {
+                    withSonarQubeEnv('sonarqube') {
+                        sh '''
+                        sonar-scanner \
+                        -Dsonar.projectKey=linuxproject \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://localhost:9000 \
+                        -Dsonar.login=$SONAR_AUTH_TOKEN
+                        '''
+                    }
+                }
             }
         }
 
@@ -46,12 +64,8 @@ pipeline {
             steps {
                 echo "🚀 Deploying container..."
                 sh '''
-                    # Remove any old container with same name
                     docker rm -f linuxproject || true
-
-                    # Run new container (host 8081 -> container 3000)
                     docker run -d --name linuxproject -p 8081:3000 $DOCKER_IMAGE
-
                     echo "✅ Container running successfully on port 8081"
                 '''
             }
@@ -61,7 +75,7 @@ pipeline {
             steps {
                 echo "🩺 Checking application health..."
                 sh '''
-                    sleep 3
+                    sleep 5
                     curl -f http://localhost:8081 || (echo "❌ Health check failed!" && exit 1)
                 '''
             }
@@ -71,7 +85,7 @@ pipeline {
             steps {
                 echo "🧹 Cleaning up unused Docker data..."
                 sh '''
-                    docker system prune -f
+                    docker image prune -f
                 '''
             }
         }
@@ -79,10 +93,10 @@ pipeline {
 
     post {
         success {
-            echo "✅ Build, push, and deploy completed successfully!"
+            echo "✅ Build, push, deploy + SonarQube analysis completed successfully!"
         }
         failure {
-            echo "❌ Build failed. Check logs."
+            echo "❌ Pipeline failed. Check logs."
         }
     }
 }

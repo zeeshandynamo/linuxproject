@@ -17,16 +17,25 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 echo "🔍 Running SonarQube analysis..."
-                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')]) {
-                    withSonarQubeEnv('sonarqube') {
-                        sh '''
-                        sonar-scanner \
-                        -Dsonar.projectKey=linuxproject \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=http://localhost:9000 \
-                        -Dsonar.login=$SONAR_AUTH_TOKEN
-                        '''
-                    }
+
+                withSonarQubeEnv('sonarqube') {
+                    sh '''
+                    sonar-scanner \
+                    -Dsonar.projectKey=linuxproject \
+                    -Dsonar.sources=. \
+                    -Dsonar.host.url=http://15.207.117.44:9000 \
+                    -Dsonar.login=$SONAR_AUTH_TOKEN
+                    '''
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                echo "🚦 Checking Quality Gate..."
+
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
@@ -93,7 +102,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ Build, push, deploy + SonarQube analysis completed successfully!"
+            echo "✅ Full CI/CD Pipeline + SonarQube + Quality Gate completed!"
         }
         failure {
             echo "❌ Pipeline failed. Check logs."

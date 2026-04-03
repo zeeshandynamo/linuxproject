@@ -2,8 +2,8 @@ pipeline {
     agent any
 
  tools {
-        sonarQubeScanner 'sonar-scanner'
-    }
+    sonarRunner 'sonar-scanner'
+}
     
     environment {
         DOCKER_IMAGE = "zeeshandynamo/linuxproject:latest"

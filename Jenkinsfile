@@ -7,13 +7,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout Code') {
-            steps {
-                echo "📥 Checking out latest code from GitHub..."
-                git branch: 'main', url: 'https://github.com/zeeshandynamo/linuxproject.git'
-            }
-        }
-
         stage('SonarQube Analysis') {
             steps {
                 echo "🔍 Running SonarQube analysis..."

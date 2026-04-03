@@ -59,7 +59,7 @@ app.get('/', (req, res) => {
 
         <ul>
           <li>👩‍💻 Hena Tabbu </li>
-          <li>👨‍💻 Zeeshan Ali M </li>
+          <li>👨‍💻 Zeeshan Ali </li>
           <li>👩‍💻 Naeem Momin </li>
           <li>👨‍💻 Irshad Ahmed </li>
         </ul>

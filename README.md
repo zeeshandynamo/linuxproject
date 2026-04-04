@@ -17,3 +17,4 @@ force fresh sonarqube scan
 mark old issues resolved
 mark old issues resolved
 first analysis
+final update with critical errors only in trivy

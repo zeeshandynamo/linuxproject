@@ -59,7 +59,7 @@ stage('Quality Gate') {
         echo "🔒 Scanning Docker image for vulnerabilities..."
         sh '''
             trivy image --severity HIGH,CRITICAL \
-            --exit-code 0 \
+            --exit-code 1 \
             --no-progress \
             zeeshandynamo/linuxproject:latest
         '''

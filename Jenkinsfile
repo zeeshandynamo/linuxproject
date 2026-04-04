@@ -25,6 +25,16 @@ pipeline {
                 }
             }
         }
+
+stage('Quality Gate') {
+    steps {
+        echo "🚦 Checking Quality Gate..."
+        timeout(time: 3, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
+        }
+    }
+}
+        
         stage('Login to DockerHub') {
             steps {
                 echo "🔐 Logging into DockerHub..."

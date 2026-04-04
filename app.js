@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
-// ✅ Serve HTML instead of plain text for a nicer look
+// ✅ Serve HTML instead of plain text for a nicer looks
 app.get('/', (req, res) => {
   res.send(`
     <html>

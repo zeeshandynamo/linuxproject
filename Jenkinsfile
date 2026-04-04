@@ -53,6 +53,19 @@ stage('Quality Gate') {
                 '''
             }
         }
+
+        stage('Trivy Security Scan') {
+    steps {
+        echo "🔒 Scanning Docker image for vulnerabilities..."
+        sh '''
+            trivy image --severity HIGH,CRITICAL \
+            --exit-code 1 \
+            --no-progress \
+            zeeshandynamo/linuxproject:latest
+        '''
+    }
+}
+        
         stage('Push to DockerHub') {
             steps {
                 echo "📤 Pushing image to DockerHub..."

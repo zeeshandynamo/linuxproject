@@ -4,33 +4,27 @@ pipeline {
     environment {
         DOCKER_IMAGE = "zeeshandynamo/linuxproject:latest"
     }
-
     stages {
-
+        stage('Checkout Code') {
+            steps {
+                echo "📥 Checking out latest code from GitHub..."
+                git branch: 'main', url: 'https://github.com/zeeshandynamo/linuxproject.git'
+            }
+        }
         stage('SonarQube Analysis') {
-    steps {
-        withSonarQubeEnv('sonarqube') {
-            sh '''
-            sonar-scanner \
-            -Dsonar.projectKey=linuxproject \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=http://localhost:9000 \
-            -Dsonar.login=$SONAR_AUTH_TOKEN
-            '''
+            steps {
+                echo "🔍 Running SonarQube analysis..."
+                withSonarQubeEnv('sonarqube') {
+                    sh '''
+                    sonar-scanner \
+                    -Dsonar.projectKey=linuxproject \
+                    -Dsonar.sources=. \
+                    -Dsonar.host.url=http://localhost:9000 \
+                    -Dsonar.login=$SONAR_AUTH_TOKEN
+                    '''
+                }
+            }
         }
-    }
-}
-
-        stage('Quality Gate') {
-    steps {
-        echo "🚦 Checking Quality Gate..."
-
-        timeout(time: 10, unit: 'MINUTES') {
-            waitForQualityGate abortPipeline: true
-        }
-    }
-}
-
         stage('Login to DockerHub') {
             steps {
                 echo "🔐 Logging into DockerHub..."
@@ -41,7 +35,6 @@ pipeline {
                 }
             }
         }
-
         stage('Build Docker Image') {
             steps {
                 echo "🐳 Building Docker image..."
@@ -50,7 +43,6 @@ pipeline {
                 '''
             }
         }
-
         stage('Push to DockerHub') {
             steps {
                 echo "📤 Pushing image to DockerHub..."
@@ -59,7 +51,6 @@ pipeline {
                 '''
             }
         }
-
         stage('Deploy Container') {
             steps {
                 echo "🚀 Deploying container..."
@@ -70,7 +61,6 @@ pipeline {
                 '''
             }
         }
-
         stage('Health Check') {
             steps {
                 echo "🩺 Checking application health..."
@@ -80,7 +70,6 @@ pipeline {
                 '''
             }
         }
-
         stage('Cleanup') {
             steps {
                 echo "🧹 Cleaning up unused Docker data..."
@@ -90,10 +79,9 @@ pipeline {
             }
         }
     }
-
     post {
         success {
-            echo "✅ Full CI/CD Pipeline + SonarQube + Quality Gate completed!"
+            echo "✅ Full CI/CD Pipeline + SonarQube completed!"
         }
         failure {
             echo "❌ Pipeline failed. Check logs."

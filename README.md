@@ -21,3 +21,4 @@ final update with critical errors only in trivy
 re-installing entire project check build
 rebuild after grafana installation
 new build for recordinng
+final test for grafana

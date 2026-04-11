@@ -18,3 +18,4 @@ mark old issues resolved
 mark old issues resolved
 first analysis
 final update with critical errors only in trivy
+re-installing entire project check build

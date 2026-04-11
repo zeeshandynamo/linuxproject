@@ -20,3 +20,4 @@ first analysis
 final update with critical errors only in trivy
 re-installing entire project check build
 rebuild after grafana installation
+new build for recording

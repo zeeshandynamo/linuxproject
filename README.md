@@ -156,12 +156,14 @@ Telegram alerts
 ❌ Forgetting to open ports
 ❌ Not restarting after Docker install
 ❌ SonarQube not running before pipeline
+
+
 🔮 Future Improvements
 ArgoCD (GitOps)
 Helm Charts
 HashiCorp Vault
 Istio Service Mesh
 Multi-cloud deployment
-👨‍💻 Author
 
+👨‍💻 Author
 Zeeshan Ali Mannur

@@ -13,7 +13,9 @@ Monitoring & alerting
 💡 Designed to simulate production-grade SRE workflows
 
 🏗️ Architecture
-<p align="center"> <img src="./assets/architecture.png" width="900"> </p>
+<p align="center">
+  <img src="./Project Archietecture.png" width="900">
+</p>
 🔄 Pipeline Flow
 GitHub → Jenkins → SonarQube → Docker → Trivy → DockerHub → Kubernetes → Prometheus → Grafana → Alerts
 ⚡ Features

@@ -166,4 +166,4 @@ Istio Service Mesh
 Multi-cloud deployment
 
 👨‍💻 Author
-Zeeshan Ali Mannur
+Zeeshanali M Mannur

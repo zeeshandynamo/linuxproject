@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "zeeshandynamo/linuxproject:latest"
+        DOCKER_IMAGE = "zeeshandynamo/linuxproject:${BUILD_NUMBER}"
     }
 
     stages {

@@ -17,7 +17,7 @@ Monitoring & alerting
   <img src="./Project Archietecture.png" width="900">
 </p>
 🔄 Pipeline Flow
-GitHu b → Jenkins → SonarQube → Docker → Trivy → DockerHub → Kubernetes → Prometheus → Grafana → Alerts
+GitHub → Jenkins → SonarQube → Docker → Trivy → DockerHub → Kubernetes → Prometheus → Grafana → Alerts
 ⚡ Features
 ✅ Fully automated CI/CD pipeline
 🔐 DevSecOps security (SonarQube + Trivy)

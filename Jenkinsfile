@@ -40,7 +40,8 @@ pipeline {
             steps {
                 echo "🚀 Deploying container..."
                 sh '''
-                    docker rm -f linuxproject || true
+                    docker stop linuxproject || true
+                    docker rm linuxproject || true
                     docker run -d --name linuxproject -p 8081:3000 $DOCKER_IMAGE
                     echo "✅ Container running on port 8081"
                 '''

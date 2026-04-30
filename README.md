@@ -129,7 +129,7 @@ Payload URL:
 
 http://<IP>:8080/github-webhook/
 </details>
-<details> <summary>▶️ Step 14: Run Pipeline</summary>
+<details> <summary>▶️ Step 14: Run Pipeline </summary>
 git add .
 git commit -m "trigger"
 git push origin main

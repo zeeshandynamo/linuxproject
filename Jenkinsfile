@@ -61,7 +61,7 @@ pipeline {
         stage('Cleanup') {
             steps {
                 echo "🧹 Cleaning up unused Docker data..."
-                sh 'docker image prune -f'
+                sh 'docker image prune -f --filter "until=24h"'
             }
         }
     }
